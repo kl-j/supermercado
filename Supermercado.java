@@ -21,14 +21,19 @@ public class Supermercado {
     double costoTotal;
 
     public Supermercado() {
-        this("Bienvenido a la tiendita Mau y David");
+        this("Bienvenido a la tiendita Mau, David y Nat");
     }
 
     public Supermercado(String mensajeBienvenida) {
         JOptionPane.showMessageDialog(null, mensajeBienvenida);
     }
     
-    //Datos del cajero en turno
+
+    /**
+    * Collects sales data including the cash register number and cashier's name.
+    * Validates and enforces input requirements
+    * 
+    */
     public void datosVenta() {
     boolean validNumeroCaja = false;
     boolean validCajero = false;
@@ -55,6 +60,12 @@ public class Supermercado {
 }
 
 
+    /**
+    * Displays a menu to the user for selecting items to purchase and processing the purchase.
+    * The user is prompted to enter a choice, and the selected option is processed using the "procesarOpcion" method.
+    * After the user finishes shopping, it calculates the total cost, applies taxes
+    * It calls mostrarCArrito() and imprimirTicket()
+    */
     public void menu() {
         do {
             op = JOptionPane.showInputDialog("""
@@ -74,11 +85,12 @@ public class Supermercado {
 
         mostrarCarrito();
         
-        ImprimirTicket();
+        imprimirTicket();
 
         JOptionPane.showMessageDialog(null, "Gracias por tu compra. ¡Hasta luego!");
     }
 
+    
     public void procesarOpcion(String opcion) {
         int eleccion;
         try {
@@ -111,6 +123,13 @@ public class Supermercado {
         }
     }
 
+    /**
+    * Processes the purchase of a selected item by the user. It prompts the user for the quantity
+    * of the item they want to buy, calculates the total cost, updates the shopping cart, and displays
+    * a confirmation message.
+    *
+    * @param articulo The selected item to purchase.
+    */
     public void comprarArticulo(Articulo articulo) {
         String cantidadStr = JOptionPane.showInputDialog("¿Cuánto deseas comprar de " + articulo + " (en kg)?");
         try {
@@ -124,6 +143,14 @@ public class Supermercado {
         }
     }
 
+    /**
+    * Stores the purchased item's information in the shopping cart. It adds the item, quantity, and
+    * total cost to the cart using an object array
+    *
+    * @param articulo    The purchased item.
+    * @param cantidad    The quantity of the item purchased (in kilograms).
+    * @param costoTotal  The total cost of the purchased item.
+    */
     public void guardarEnCarrito(Articulo articulo, double cantidad, double costoTotal) {
         for (int i = 0; i < carrito.length; i++) {
             if (carrito[i][0] == null) {
@@ -136,11 +163,21 @@ public class Supermercado {
         }
     }
 
+    /**
+    * Calculates and returns the total tax amount (10% of the total purchase amount).
+    *
+    * @param totalCompra The total cost of the items in the shopping cart.
+    * @return The calculated tax amount.
+    */
     public double calcularImpuesto(double totalCompra) {
         double impuesto = totalCompra * 0.10;
         return impuesto;
     }
 
+    /**
+    * Displays a list of items in the shopping cart. It shows the names of the items
+    * currently in the cart.
+    */
     public void mostrarCarrito() {
         JOptionPane.showMessageDialog(null, "Artículos en el carrito:");
         for (int i = 0; i < carrito.length; i++) {
@@ -151,17 +188,27 @@ public class Supermercado {
         }
     }
 
+    /**
+    * Entry point of the Supermercado application. Creates a Supermercado instance, calls datosVenta
+    * and initiates the shopping menu.
+    * 
+    */
     public static void main(String[] args) {
         Supermercado supermercado = new Supermercado("ShopPal Ver1.1");
         supermercado.datosVenta();
         supermercado.menu();
     }
 
-    private void ImprimirTicket() {
+   /**
+    * Generates and displays a purchase receipt for the items in the shopping cart. It includes
+    * the cashier's name, cash register number, purchased items, their quantities, and the total cost
+    * of the purchase, along with taxes.
+    */
+    private void imprimirTicket() {
         StringBuilder ticketContent = new StringBuilder();
 
     // Nombre Supermercado
-    ticketContent.append("Supermercado Tiendita de Mau y David\n\n");
+    ticketContent.append("Supermercado Tiendita de Mau, David y Nat\n\n");
 
     // Cajero
      String[] nameParts = cajero.split(" ");    
@@ -177,7 +224,7 @@ public class Supermercado {
 
     // Dirección
     ticketContent.append("Dirección: Calle 123, Colonia, Mex\n\n");
-    ticketContent.append("------------------------------------------------------\n\n");
+    ticketContent.append("------------------------------------------------------------------------------------------------\n\n");
 
 
     // Articulos y costo
@@ -187,7 +234,8 @@ public class Supermercado {
                 Articulo articulo = (Articulo) carrito[i][0];
                 double cantidad = (double) carrito[i][1];
                 double costoTotal = (double) carrito[i][2];
-            ticketContent.append(articulo.nombre).append(" ($").append(articulo.precioPorKg).append("/kg)\n");
+                String nombreArticulo = articulo.nombre.toUpperCase(); // uppercase
+            ticketContent.append(nombreArticulo).append(" ($").append(articulo.precioPorKg).append("/kg)\n");
             ticketContent.append("Cantidad: ").append(cantidad).append(  "--- Total: $ ").append(costoTotal).append("kg)\n");
             //CANTIDAD
             //TOTAL POR PRODUCTO
@@ -195,7 +243,7 @@ public class Supermercado {
         }
     }
         
-    ticketContent.append("------------------------------------------------------\n\n");
+    ticketContent.append("------------------------------------------------------------------------------------------------\n\n");
     ticketContent.append("\nCosto total de la compra: $").append(totalCompra).append("\n");
 
     // Impuesto
