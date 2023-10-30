@@ -221,9 +221,13 @@ public class Supermercado {
 
     // RFC
     ticketContent.append("RFC: RFCXXXXX\n");
+ 
+   // Dirección
+   
+    //ticketContent.append("Dirección: Calle 123, Colonia, Mex\n\n");
+    String direccion = String.format("Dirección: %s, %s, %s%n%n", "Calle 123", "Colonia", "Mex");
+    ticketContent.append(direccion);
 
-    // Dirección
-    ticketContent.append("Dirección: Calle 123, Colonia, Mex\n\n");
     ticketContent.append("------------------------------------------------------------------------------------------------\n\n");
 
 
