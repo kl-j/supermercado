@@ -11,21 +11,50 @@ import javax.swing.JOptionPane;
  * @author MI PC
  */
 public class Supermercado {
- 
-  private String op;
-    private double totalCompra = 0.0; // Variable para acumular el costo total de la compra
 
-    // Constructor sin argumentos (mensaje de bienvenida predeterminado)
+   private String op;
+    private double totalCompra = 0.0;
+    private Object[][] carrito = new Object[5][3];
+    String cajero;
+    String numeroCaja;
+    private double cantidad;
+    double costoTotal;
+
     public Supermercado() {
-        this("Bienvenido a la tiendita Mau y David"); // Llama al constructor con mensaje personalizado
+        this("Bienvenido a la tiendita Mau y David");
     }
 
-    // Constructor con un mensaje de bienvenida personalizado
     public Supermercado(String mensajeBienvenida) {
-        JOptionPane.showMessageDialog(null, mensajeBienvenida); // Muestra un mensaje de bienvenida
+        JOptionPane.showMessageDialog(null, mensajeBienvenida);
+    }
+    
+    //Datos del cajero en turno
+    public void datosVenta() {
+    boolean validNumeroCaja = false;
+    boolean validCajero = false;
+
+    while (!validNumeroCaja) {
+        numeroCaja = JOptionPane.showInputDialog("Por favor, ingrese el número de la caja (un carácter):");
+
+        if (numeroCaja != null && numeroCaja.length() == 1 && Character.isLetterOrDigit(numeroCaja.charAt(0))) {
+            validNumeroCaja = true;
+        } else {
+            JOptionPane.showMessageDialog(null, "Número de caja no válido. Debe ser un carácter alfanumérico.");
+        }
     }
 
-    // Método principal que controla la interacción con el usuario
+    while (!validCajero) {
+        cajero = JOptionPane.showInputDialog("Por favor, ingrese su nombre completo:");
+
+        if (cajero != null && cajero.matches("^[a-zA-Z ]+$")) {
+            validCajero = true;
+        } else {
+            JOptionPane.showMessageDialog(null, "Nombre completo no válido. Debe contener solo letras y espacios.");
+        }
+    }
+}
+
+
     public void menu() {
         do {
             op = JOptionPane.showInputDialog("""
@@ -37,22 +66,19 @@ public class Supermercado {
                                              5. Frijol ($20/kg)
                                              6. Terminar compra""");
 
-            // Llama al método para procesar la elección del usuario
             procesarOpcion(op);
-        } while (!op.equals("6")); // Continúa mostrando el menú hasta que el usuario elija "6" para salir
+        } while (!op.equals("6"));
 
-        // Muestra el costo total al finalizar la compra
-        JOptionPane.showMessageDialog(null, "El costo total de la compra es: $" + totalCompra);
-        
-        // Llama al método para calcular el impuesto y muestra el resultado
         double impuesto = calcularImpuesto(totalCompra);
-        JOptionPane.showMessageDialog(null, "Impuesto aplicado: $" + impuesto);
+        JOptionPane.showMessageDialog(null, "El costo total de la compra es: $" + totalCompra + "\nImpuesto aplicado: $" + impuesto);
+
+        mostrarCarrito();
         
-        // Mensaje de despedida
+        ImprimirTicket();
+
         JOptionPane.showMessageDialog(null, "Gracias por tu compra. ¡Hasta luego!");
     }
 
-    // Método para procesar la opción del usuario
     public void procesarOpcion(String opcion) {
         int eleccion;
         try {
@@ -64,52 +90,125 @@ public class Supermercado {
 
         switch (eleccion) {
             case 1:
-                comprarArticulo("Papa", 23);
+                comprarArticulo(new Papa());
                 break;
             case 2:
-                comprarArticulo("Arroz", 35);
+                comprarArticulo(new Arroz());
                 break;
             case 3:
-                comprarArticulo("Jitomate", 30);
+                comprarArticulo(new Jitomate());
                 break;
             case 4:
-                comprarArticulo("Huevo", 40);
+                comprarArticulo(new Huevo());
                 break;
             case 5:
-                comprarArticulo("Frijol", 20);
+                comprarArticulo(new Frijol());
                 break;
             case 6:
-                // El usuario seleccionó terminar la compra, no se hace nada aquí
                 break;
             default:
                 JOptionPane.showMessageDialog(null, "Opción no válida.");
         }
     }
 
-    // Método para realizar la compra del artículo
-    public void comprarArticulo(String articulo, int precioPorKg) {
+    public void comprarArticulo(Articulo articulo) {
         String cantidadStr = JOptionPane.showInputDialog("¿Cuánto deseas comprar de " + articulo + " (en kg)?");
-
         try {
-            double cantidad = Double.parseDouble(cantidadStr);
-            double costoTotal = cantidad * precioPorKg;
-            totalCompra += costoTotal; // Acumula el costo total en la variable de clase
-            JOptionPane.showMessageDialog(null, "Has seleccionado comprar " + cantidad + " kg de " + articulo + ". El costo total es $" + costoTotal);
+            cantidad = Double.parseDouble(cantidadStr);
+            costoTotal = articulo.calcularCosto(cantidad);
+            totalCompra += costoTotal;
+            guardarEnCarrito(articulo, cantidad, costoTotal);
+            JOptionPane.showMessageDialog(null, "Has seleccionado comprar " + cantidad + " kg de " + articulo.nombre + ". El costo total es $" + costoTotal);
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Cantidad no válida. Ingrese un número válido.");
         }
     }
-    
-    // Método para calcular el impuesto y devolverlo como resultado
+
+    public void guardarEnCarrito(Articulo articulo, double cantidad, double costoTotal) {
+        for (int i = 0; i < carrito.length; i++) {
+            if (carrito[i][0] == null) {
+                carrito[i][0] = articulo;
+                carrito[i][1] = cantidad;
+                carrito[i][2] = costoTotal;
+                
+                break;
+            }
+        }
+    }
+
     public double calcularImpuesto(double totalCompra) {
-        // Supongamos un impuesto del 10% sobre la compra
         double impuesto = totalCompra * 0.10;
         return impuesto;
     }
 
-    public static void main(String[] args) {
-        // Creamos una instancia de Supermercado con un mensaje de bienvenida personalizado
-        Supermercado supermercado = new Supermercado("ShopPal Ver1.0");
-        supermercado.menu(); // Inicia la interacción con el usuario
+    public void mostrarCarrito() {
+        JOptionPane.showMessageDialog(null, "Artículos en el carrito:");
+        for (int i = 0; i < carrito.length; i++) {
+            if (carrito[i][0] != null) {
+                Articulo articulo = (Articulo) carrito[i][0];
+                JOptionPane.showMessageDialog(null, articulo.nombre);
+            }
+        }
     }
+
+    public static void main(String[] args) {
+        Supermercado supermercado = new Supermercado("ShopPal Ver1.1");
+        supermercado.datosVenta();
+        supermercado.menu();
+    }
+
+    private void ImprimirTicket() {
+        StringBuilder ticketContent = new StringBuilder();
+
+    // Nombre Supermercado
+    ticketContent.append("Supermercado Tiendita de Mau y David\n\n");
+
+    // Cajero
+     String[] nameParts = cajero.split(" ");    
+    if (nameParts.length >= 2) {
+            String firstName = nameParts[0];
+            String lastName = nameParts[1];
+            ticketContent.append("Cajero: ").append(lastName).append(", ").append(firstName.charAt(0)).append(".\n");
+    // Caja
+    ticketContent.append("Número de Caja: ").append(numeroCaja).append("\n");
+
+    // RFC
+    ticketContent.append("RFC: RFCXXXXX\n");
+
+    // Dirección
+    ticketContent.append("Dirección: Calle 123, Colonia, Mex\n\n");
+    ticketContent.append("------------------------------------------------------\n\n");
+
+
+    // Articulos y costo
+    ticketContent.append("Artículos en el carrito:\n");
+        for (int i = 0; i < carrito.length; i++) {
+            if (carrito[i][0] != null) {
+                Articulo articulo = (Articulo) carrito[i][0];
+                double cantidad = (double) carrito[i][1];
+                double costoTotal = (double) carrito[i][2];
+            ticketContent.append(articulo.nombre).append(" ($").append(articulo.precioPorKg).append("/kg)\n");
+            ticketContent.append("Cantidad: ").append(cantidad).append(  "--- Total: $ ").append(costoTotal).append("kg)\n");
+            //CANTIDAD
+            //TOTAL POR PRODUCTO
+            
+        }
+    }
+        
+    ticketContent.append("------------------------------------------------------\n\n");
+    ticketContent.append("\nCosto total de la compra: $").append(totalCompra).append("\n");
+
+    // Impuesto
+    double impuesto = calcularImpuesto(totalCompra);
+    ticketContent.append("Impuesto aplicado: $").append(impuesto).append("\n");
+ 
+    String formattedReceipt = String.format(
+        "================== Ticket de Compra ==================\n%s\n======================================================",
+        ticketContent.toString()
+    );
+
+    JOptionPane.showMessageDialog(null, formattedReceipt, "Ticket de Compra", JOptionPane.PLAIN_MESSAGE);
+        
+    }
+}
 }
