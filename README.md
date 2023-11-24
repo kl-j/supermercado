@@ -5,7 +5,7 @@ Welcome to the Supermercado Java Shopping Cart Application! This simple Java app
 ## Getting Started
 
 1. Clone the Repository:
-`git clone https://github.com/your-username/supermercado-java.git`
+```git clone https://github.com/your-username/supermercado-java.git```
 1. Open in IDE:
 O1. pen the project in your preferred Java IDE. This project was developed with NetBeans.
 
