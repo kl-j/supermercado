@@ -50,6 +50,11 @@ public class Login extends javax.swing.JFrame {
         jLabel1.setText("Caja no:");
 
         bttLogin.setText("Login");
+        bttLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bttLoginActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -96,6 +101,8 @@ public class Login extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jSpinner1.getAccessibleContext().setAccessibleName("txtRegister");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -116,6 +123,22 @@ public class Login extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void bttLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttLoginActionPerformed
+        // TODO add your handling code here:
+        String cashier = txtName.getText();
+        int register = (int) jSpinner1.getValue();//txtRegister
+        
+        
+        
+        supermercado.datosVenta(cashier);
+        // Hide the current Login form
+        setVisible(false);
+
+        // Show the ProductsFrm form
+        ProductsFrm productsForm = new ProductsFrm();
+        productsForm.setVisible(true);
+    }//GEN-LAST:event_bttLoginActionPerformed
 
     /**
      * @param args the command line arguments

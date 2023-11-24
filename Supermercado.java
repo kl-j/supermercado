@@ -5,12 +5,15 @@
 package com.mycompany.supermercado;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 /**
  *
  * @author MI PC
  */
 public class Supermercado {
+    
+    
 
    private String op;
     private double totalCompra = 0.0;
@@ -20,13 +23,13 @@ public class Supermercado {
     private double cantidad;
     double costoTotal;
 
-    public Supermercado() {
-        this("Bienvenido a la tiendita Mau, David y Nat");
-    }
-
-    public Supermercado(String mensajeBienvenida) {
-        JOptionPane.showMessageDialog(null, mensajeBienvenida);
-    }
+//    public Supermercado() {
+//        this("Bienvenido a la tiendita Mau, David y Nat");
+//    }
+//
+//    public Supermercado(String mensajeBienvenida) {
+//        JOptionPane.showMessageDialog(null, mensajeBienvenida);
+//    }
     
 
     /**
@@ -34,22 +37,22 @@ public class Supermercado {
     * Validates and enforces input requirements
     * 
     */
-    public void datosVenta() {
-    boolean validNumeroCaja = false;
+    public void datosVenta(String cashier) {
+    //boolean validNumeroCaja = false;
     boolean validCajero = false;
 
-    while (!validNumeroCaja) {
-        numeroCaja = JOptionPane.showInputDialog("Por favor, ingrese el número de la caja (un carácter):");
-
-        if (numeroCaja != null && numeroCaja.length() == 1 && Character.isLetterOrDigit(numeroCaja.charAt(0))) {
-            validNumeroCaja = true;
-        } else {
-            JOptionPane.showMessageDialog(null, "Número de caja no válido. Debe ser un carácter alfanumérico.");
-        }
-    }
+//    while (!validNumeroCaja) {
+//        numeroCaja = JOptionPane.showInputDialog("Por favor, ingrese el número de la caja (un carácter):");
+//
+//        if (numeroCaja != null && numeroCaja.length() == 1 && Character.isLetterOrDigit(numeroCaja.charAt(0))) {
+//            validNumeroCaja = true;
+//        } else {
+//            JOptionPane.showMessageDialog(null, "Número de caja no válido. Debe ser un carácter alfanumérico.");
+//        }
+//    }
 
     while (!validCajero) {
-        cajero = JOptionPane.showInputDialog("Por favor, ingrese su nombre completo:");
+        cajero = cashier;
 
         if (cajero != null && cajero.matches("^[a-zA-Z ]+$")) {
             validCajero = true;
@@ -194,6 +197,15 @@ public class Supermercado {
     * 
     */
     public static void main(String[] args) {
+        ////FORM
+        Login loginForm = new Login();
+
+        // Display the login form
+        SwingUtilities.invokeLater(() -> {
+            loginForm.setVisible(true);
+        });
+        
+        ///END FORM
         Supermercado supermercado = new Supermercado("ShopPal Ver1.1");
         supermercado.datosVenta();
         supermercado.menu();

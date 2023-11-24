@@ -138,11 +138,17 @@
         <Component class="java.awt.TextField" name="txtName">
         </Component>
         <Component class="javax.swing.JSpinner" name="jSpinner1">
+          <AccessibilityProperties>
+            <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="txtRegister"/>
+          </AccessibilityProperties>
         </Component>
         <Component class="javax.swing.JButton" name="bttLogin">
           <Properties>
             <Property name="text" type="java.lang.String" value="Login"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bttLoginActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
